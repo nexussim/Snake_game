@@ -8,17 +8,19 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 let coordinates = { x: -20, y: 0 };
 let direction = {axis: 'x'};
+let path = {direction: 'right'};
 
 
 
-var bw = 600;
-// Box height
-var bh = 600;
-// Padding
-var p = 0;
 
 
-function drawBoard(){
+const drawBoard = () => {
+
+    /* BOX WIDTH & HEIGHT & PADDING */
+    var bw = 600;
+    var bh = 600;
+    var p = 0;
+
     for (var x = 0; x <= bw; x += 20) {
         ctx.moveTo(0.5 + x + p, p);
         ctx.lineTo(0.5 + x + p, bh + p);
@@ -34,12 +36,16 @@ function drawBoard(){
 
 /* ANIMATION UPDATES */
 
-setInterval(function draw(coordinates, direction) {
+setInterval(function draw(coordinates, direction, path) {
 
-    if (direction.axis === 'x') {
+    if (direction.axis === 'x' && path.direction === 'right') {
         coordinates.x += 20;
-    } else if (direction.axis === 'y') {
+    } else if (direction.axis === 'y' && path.direction === 'down') {
         coordinates.y += 20;
+    } else if (direction.axis === 'y' && path.direction === 'up') {
+        coordinates.y += -20;
+    } else if (direction.axis === 'x' && path.direction === 'left') {
+      coordinates.x += -20;
     }
     /* CANVAS */
     ctx.fillStyle = 'black';
@@ -50,17 +56,23 @@ setInterval(function draw(coordinates, direction) {
     /* REDRAW BOARD */
     drawBoard();
 
-}, 200, coordinates, direction)
+}, 500, coordinates, direction, path)
 
 document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowDown') {
+
+    if (event.key === 'ArrowDown' && direction.axis !== 'y') {
         direction.axis = 'y';
+        path.direction = 'down';
     } else if (event.key === 'ArrowUp' && direction.axis !== 'y') {
         direction.axis = 'y';
-    }else if (event.key === 'ArrowRight' && direction.axis !== 'x') {
+        path.direction = 'up';
+    } else if (event.key === 'ArrowRight' && direction.axis !== 'x') {
         direction.axis = 'x';
+        path.direction = 'right';
     } else if (event.key === 'ArrowLeft' && direction.axis !== 'x') {
         direction.axis = 'x';
+        path.direction = 'left';
     } 
+
 })
 
