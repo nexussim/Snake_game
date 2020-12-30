@@ -11,6 +11,7 @@ let coordinates = { x: -20, y: 0 };
 let direction = {axis: 'x'};
 let path = {direction: 'right'};
 
+let foodCoordinates = {x: 0, y: 0};
 
 
 /* BOARD GRID CREATION */
@@ -107,99 +108,70 @@ const gameOverMsg = () => {
 
     /* Y */
 
-    ctx.fillRect(100, 80, 20, 20);
-    ctx.fillRect(140, 80, 20, 20);
-    ctx.fillRect(100, 100, 20, 20);
-    ctx.fillRect(100, 120, 20, 20);
-    ctx.fillRect(120, 120, 20, 20);
-    ctx.fillRect(140, 120, 20, 20);
-    ctx.fillRect(140, 100, 20, 20);
-    ctx.fillRect(120, 140, 20, 20);
-    ctx.fillRect(120, 160, 20, 20);
+    ctx.fillRect(100, 80, 20, 60);
+    ctx.fillRect(140, 80, 20, 60);
+    ctx.fillRect(120, 120, 20, 60);
     ctx.fillRect(180, 160, 20, 20);
     ctx.fillRect(220, 160, 20, 20);
 
     /* O */
 
-    ctx.fillRect(180, 80, 20, 20);
+    ctx.fillRect(180, 80, 20, 100);
     ctx.fillRect(220, 140, 20, 20);
-    ctx.fillRect(220, 80, 20, 20);
-    ctx.fillRect(180, 140, 20, 20);
-    ctx.fillRect(180, 120, 20, 20);
-    ctx.fillRect(180, 100, 20, 20);
+    ctx.fillRect(220, 80, 20, 100);
     ctx.fillRect(200, 80, 20, 20);
     ctx.fillRect(200, 160, 20, 20);
-    ctx.fillRect(220, 140, 20, 20);
-    ctx.fillRect(220, 100, 20, 20);
-    ctx.fillRect(220, 120, 20, 20);
 
     /* U */
 
-    ctx.fillRect(260, 80, 20, 20);
-    ctx.fillRect(300, 80, 20, 20);
-    ctx.fillRect(260, 100, 20, 20);
-    ctx.fillRect(260, 120, 20, 20);
-    ctx.fillRect(260, 160, 20, 20);
+    ctx.fillRect(300, 80, 20, 100);
+    ctx.fillRect(260, 80, 20, 100);
     ctx.fillRect(280, 160, 20, 20);
-    ctx.fillRect(300, 160, 20, 20);
-    ctx.fillRect(300, 100, 20, 20);
-    ctx.fillRect(300, 120, 20, 20);
-    ctx.fillRect(300, 140, 20, 20);
-    ctx.fillRect(260, 140, 20, 20);
-    
 
     /* L */
 
-    ctx.fillRect(60, 200, 20, 20);
-    ctx.fillRect(60, 220, 20, 20);
-    ctx.fillRect(60, 240, 20, 20);
-    ctx.fillRect(60, 260, 20, 20);
-    ctx.fillRect(60, 280, 20, 20);
-    ctx.fillRect(80, 280, 20, 20);
-    ctx.fillRect(100, 280, 20, 20);
+    ctx.fillRect(60, 200, 20, 100);
+    ctx.fillRect(80, 280, 40, 20);
 
     /* 0 #2 */
 
-    ctx.fillRect(140, 200, 20, 20);
-    ctx.fillRect(140, 220, 20, 20);
-    ctx.fillRect(140, 240, 20, 20);
-    ctx.fillRect(140, 260, 20, 20);
-    ctx.fillRect(140, 280, 20, 20);
-    ctx.fillRect(180, 200, 20, 20);
+    ctx.fillRect(140, 200, 20, 100);
+    ctx.fillRect(180, 200, 20, 100);
     ctx.fillRect(160, 200, 20, 20);
-    ctx.fillRect(180, 220, 20, 20);
-    ctx.fillRect(180, 240, 20, 20);
-    ctx.fillRect(180, 260, 20, 20);
-    ctx.fillRect(180, 280, 20, 20);
     ctx.fillRect(160, 280, 20, 20);
 
     /* S */
 
-    ctx.fillRect(220, 200, 20, 20);
-    ctx.fillRect(240, 200, 20, 20);
-    ctx.fillRect(260, 200, 20, 20);
+    ctx.fillRect(220, 200, 60, 20);
+    ctx.fillRect(220, 240, 60, 20);
+    ctx.fillRect(220, 280, 60, 20);
     ctx.fillRect(220, 220, 20, 20);
-    ctx.fillRect(220, 240, 20, 20);
-    ctx.fillRect(240, 240, 20, 20);
-    ctx.fillRect(260, 240, 20, 20);
     ctx.fillRect(260, 260, 20, 20);
-    ctx.fillRect(260, 280, 20, 20);
-    ctx.fillRect(240, 280, 20, 20);
-    ctx.fillRect(220, 280, 20, 20);
 
     /* E */
 
-    ctx.fillRect(300, 200, 20, 20);
-    ctx.fillRect(320, 200, 20, 20);
-    ctx.fillRect(340, 200, 20, 20);
+    ctx.fillRect(300, 200, 60, 20);
     ctx.fillRect(300, 220, 20, 20);
-    ctx.fillRect(300, 240, 20, 20);
-    ctx.fillRect(320, 240, 20, 20);
-    ctx.fillRect(340, 240, 20, 20);
+    ctx.fillRect(300, 240, 60, 20);
     ctx.fillRect(300, 260, 20, 20);
-    ctx.fillRect(300, 280, 20, 20);
-    ctx.fillRect(320, 280, 20, 20);
-    ctx.fillRect(340, 280, 20, 20);
+    ctx.fillRect(300, 280, 60, 20);
+
 
 }
 
+setInterval(food = () => {
+
+    let foodArray = [];
+    let x = randomCoordinate(400);
+    let y = randomCoordinate(400);
+    foodArray.push({xCoor: x, yCoor: y, width: 20, height: 20, color: 'red'})
+    ctx.fillStyle = 'red';
+    ctx.fillRect(x, y, 20, 20);
+
+}, 5000)
+
+const randomCoordinate = (max) => {
+    let num = Math.floor(Math.random() * Math.floor(max));
+    let decimal = num / 10;
+    return Math.round(decimal) * 10;
+}
