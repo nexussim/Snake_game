@@ -11,7 +11,7 @@ let coordinates = { x: -20, y: 0 };
 let direction = {axis: 'x'};
 let path = {direction: 'right'};
 
-let foodCoordinates = {x: 0, y: 0};
+let foodArray = [];
 
 
 /* BOARD GRID CREATION */
@@ -38,7 +38,7 @@ const drawBoard = () => {
 
 /* ANIMATION UPDATES */
 
-setInterval(function draw(coordinates, direction, path) {
+setInterval(function draw(coordinates, direction, path, foodArray) {
 
     /* ENDGAME CHECK */
 
@@ -69,11 +69,17 @@ setInterval(function draw(coordinates, direction, path) {
     ctx.fillStyle = 'white';
     ctx.fillRect(coordinates.x, coordinates.y, 20, 20);
 
+    /* FOOD */
+    for (let i = 0; i < foodArray.length; i++) {
+        ctx.fillStyle = foodArray[i].color;
+        ctx.fillRect(foodArray[i].xCoor, foodArray[i].yCoor, 20, 20);
+    }
+
     /* REDRAW BOARD */
 
     drawBoard();
 
-}, 500, coordinates, direction, path)
+}, 500, coordinates, direction, path, foodArray)
 
 /* EVENT LISTENERS */
 
@@ -161,17 +167,16 @@ const gameOverMsg = () => {
 
 setInterval(food = () => {
 
-    let foodArray = [];
-    let x = randomCoordinate(400);
-    let y = randomCoordinate(400);
+    let x = randomCoordinate(400) + 1;
+    let y = randomCoordinate(400) + 1;
     foodArray.push({xCoor: x, yCoor: y, width: 20, height: 20, color: 'red'})
     ctx.fillStyle = 'red';
-    ctx.fillRect(x, y, 20, 20);
-
+    ctx.fillRect(x, y, 19, 19);
+    
 }, 5000)
 
 const randomCoordinate = (max) => {
     let num = Math.floor(Math.random() * Math.floor(max));
-    let decimal = num / 10;
-    return Math.round(decimal) * 10;
+    let decimal = num / 20;
+    return Math.round(decimal) * 20;
 }
