@@ -12,7 +12,6 @@ let direction = {axis: 'x'};
 let path = {direction: 'right'};
 let previousCoor;
 let previousTail;
-let id = 0;
 let scoreCounter = 0;
 let foodEaten = 0;
 const numTwenty = 20;
@@ -83,19 +82,19 @@ const draw = (coordinates, direction, path, foodArray) => {
     if (direction.axis === 'x' && path.direction === 'right') {
         coordinates.x += numTwenty;
         previousCoor = '+>';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white'})
     } else if (direction.axis === 'y' && path.direction === 'down') {
         coordinates.y += numTwenty;
         previousCoor = '+v';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white'})
     } else if (direction.axis === 'y' && path.direction === 'up') {
         coordinates.y += -numTwenty;
         previousCoor = '-^';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white'})
     } else if (direction.axis === 'x' && path.direction === 'left') {
         coordinates.x += -numTwenty;
         previousCoor = '-<';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white'})
     }
 
     /* FOOD */
