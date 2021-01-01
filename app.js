@@ -11,11 +11,18 @@ let coordinates = { x: -20, y: 0 };
 let direction = {axis: 'x'};
 let path = {direction: 'right'};
 let previousCoor;
-let foodEaten = 0;
+let previousTail;
+let scoreCounter = 0;
 
 let snakeArray = [];
 let foodArray = [];
 
+const scoreCard = () => {
+    const card = document.getElementById('card')
+    card.innerHTML = `Score: ${scoreCounter}`;
+}
+
+scoreCard();
 
 /* BOARD GRID CREATION */
 
@@ -36,6 +43,8 @@ const drawBoard = () => {
         ctx.lineTo(bw + p, 0.5 + x + p);
     }
     ctx.strokeStyle = "#ffff";
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = "black";
     ctx.stroke();
 }
 
@@ -95,6 +104,30 @@ const draw = (coordinates, direction, path, foodArray) => {
     }
 
     eatFood();
+
+    for (let i = 0; i < snakeArray.length; i++) {
+
+        if (previousCoor === '+>') {
+            snakeArray[i].xCoor = coordinates.x - 20;
+            snakeArray[i].yCoor = coordinates.y
+        } else if (previousCoor === '+v') {
+            snakeArray[i].xCoor = coordinates.x;
+            snakeArray[i].yCoor = coordinates.y - 20;
+
+        } else if (previousCoor === '-^') {
+            snakeArray[i].xCoor = coordinates.x;
+            snakeArray[i].yCoor = coordinates.y + 20;
+
+        } else if (previousCoor === '-<') {
+            snakeArray[i].xCoor = coordinates.x + 20;
+            snakeArray[i].yCoor = coordinates.y;
+
+        }
+
+        ctx.fillStyle = 'white';
+        ctx.fillRect(snakeArray[i].xCoor, snakeArray[i].yCoor, 20, 20);
+
+    }
 
 }
 
@@ -204,10 +237,23 @@ const food = () => {
 const eatFood = () => {
     for (let i = 0; i < foodArray.length; i++) {
         if (foodArray[i].xCoor === coordinates.x + 1 && foodArray[i].yCoor === coordinates.y + 1) {
-            foodArray.splice(foodArray[i]);
-            foodEaten++;
-            snakeArray.push({xCoor: coordinates.x - 20, yCoor: coordinates.y - 20, width: 19, height: 19, color: 'white'})
+            foodArray.splice(i, 1);
+            scoreCounter += 10;
+            scoreCard();
+            snakeTail();            
         }
+    }
+}
+
+const snakeTail = () => {
+    if (previousCoor === '+>') {
+        snakeArray.push({xCoor: coordinates.x - 20, yCoor: coordinates.y, width: 19, height: 19, color: 'white'})
+    } else if (previousCoor === '+v') {
+        snakeArray.push({xCoor: coordinates.x, yCoor: coordinates.y - 20, width: 19, height: 19, color: 'white'})
+    } else if (previousCoor === '-^') {
+        snakeArray.push({xCoor: coordinates.x, yCoor: coordinates.y + 20, width: 19, height: 19, color: 'white'})
+    } else if (previousCoor === '-<') {
+        snakeArray.push({xCoor: coordinates.x + 20, yCoor: coordinates.y, width: 19, height: 19, color: 'white'})
     }
 }
 
