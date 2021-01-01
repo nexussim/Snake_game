@@ -113,7 +113,7 @@ const draw = (coordinates, direction, path, foodArray) => {
     /* SNAKE TAIL */
 
     if (foodEaten > 0) {
-        for (let i = previousMoves.length - 2; i > 0; i--) {
+        for (let i = previousMoves.length - 2; i > 1; i--) {
             ctx.fillStyle = 'white';
             ctx.fillRect(previousMoves[i].x, previousMoves[i].y, 20, 20);
         }
