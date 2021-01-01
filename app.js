@@ -12,10 +12,13 @@ let direction = {axis: 'x'};
 let path = {direction: 'right'};
 let previousCoor;
 let previousTail;
+let id = 0;
 let scoreCounter = 0;
+let foodEaten = 0;
 
 let snakeArray = [];
 let foodArray = [];
+let previousMovesObj = [];
 
 const scoreCard = () => {
     const card = document.getElementById('card')
@@ -57,7 +60,7 @@ setInterval(function() {
 
 
 const draw = (coordinates, direction, path, foodArray) => {
-
+    
     /* CANVAS */
 
     ctx.fillStyle = 'black';
@@ -80,15 +83,19 @@ const draw = (coordinates, direction, path, foodArray) => {
     if (direction.axis === 'x' && path.direction === 'right') {
         coordinates.x += 20;
         previousCoor = '+>';
+        previousMovesObj.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
     } else if (direction.axis === 'y' && path.direction === 'down') {
         coordinates.y += 20;
         previousCoor = '+v';
+        previousMovesObj.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
     } else if (direction.axis === 'y' && path.direction === 'up') {
         coordinates.y += -20;
         previousCoor = '-^';
+        previousMovesObj.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
     } else if (direction.axis === 'x' && path.direction === 'left') {
       coordinates.x += -20;
       previousCoor = '-<';
+      previousMovesObj.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
     }
     
 
@@ -105,28 +112,11 @@ const draw = (coordinates, direction, path, foodArray) => {
 
     eatFood();
 
-    for (let i = 0; i < snakeArray.length; i++) {
-
-        if (previousCoor === '+>') {
-            snakeArray[i].xCoor = coordinates.x - 20;
-            snakeArray[i].yCoor = coordinates.y
-        } else if (previousCoor === '+v') {
-            snakeArray[i].xCoor = coordinates.x;
-            snakeArray[i].yCoor = coordinates.y - 20;
-
-        } else if (previousCoor === '-^') {
-            snakeArray[i].xCoor = coordinates.x;
-            snakeArray[i].yCoor = coordinates.y + 20;
-
-        } else if (previousCoor === '-<') {
-            snakeArray[i].xCoor = coordinates.x + 20;
-            snakeArray[i].yCoor = coordinates.y;
-
-        }
-
+    /* SNAKE TAIL */
+    
+    for (let i = previousMovesObj.length - 1; i > (previousMovesObj.length - 2) - foodEaten; i--) {
         ctx.fillStyle = 'white';
-        ctx.fillRect(snakeArray[i].xCoor, snakeArray[i].yCoor, 20, 20);
-
+        ctx.fillRect(previousMovesObj[i].x, previousMovesObj[i].y, 20, 20);
     }
 
 }
@@ -239,21 +229,9 @@ const eatFood = () => {
         if (foodArray[i].xCoor === coordinates.x + 1 && foodArray[i].yCoor === coordinates.y + 1) {
             foodArray.splice(i, 1);
             scoreCounter += 10;
-            scoreCard();
-            snakeTail();            
+            foodEaten++;
+            scoreCard();   
         }
-    }
-}
-
-const snakeTail = () => {
-    if (previousCoor === '+>') {
-        snakeArray.push({xCoor: coordinates.x - 20, yCoor: coordinates.y, width: 19, height: 19, color: 'white'})
-    } else if (previousCoor === '+v') {
-        snakeArray.push({xCoor: coordinates.x, yCoor: coordinates.y - 20, width: 19, height: 19, color: 'white'})
-    } else if (previousCoor === '-^') {
-        snakeArray.push({xCoor: coordinates.x, yCoor: coordinates.y + 20, width: 19, height: 19, color: 'white'})
-    } else if (previousCoor === '-<') {
-        snakeArray.push({xCoor: coordinates.x + 20, yCoor: coordinates.y, width: 19, height: 19, color: 'white'})
     }
 }
 
@@ -262,3 +240,11 @@ const randomCoordinate = (max) => {
     let decimal = num / 20;
     return Math.round(decimal) * 20;
 }
+
+/*
+for snake tail:
+keep track of how much food is eaten
+have an array that keeps track of all previous movement squares
+then add snake parts based off how much food eaten check and update snake parts that many times
+
+*/
