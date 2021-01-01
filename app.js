@@ -15,6 +15,8 @@ let previousTail;
 let id = 0;
 let scoreCounter = 0;
 let foodEaten = 0;
+const numTwenty = 20;
+const numNinteen = 19;
 
 let foodArray = [];
 let previousMoves = [];
@@ -31,16 +33,16 @@ scoreCard();
 const drawBoard = () => {
 
     /* BOX WIDTH & HEIGHT & PADDING */
-    const bw = 600;
-    const bh = 600;
+    const bw = 420;
+    const bh = 420;
     const p = 0;
 
-    for (let x = 0; x <= bw; x += 20) {
+    for (let x = 0; x <= bw; x += numTwenty) {
         ctx.moveTo(0.5 + x + p, p);
         ctx.lineTo(0.5 + x + p, bh + p);
     }
 
-    for (let x = 0; x <= bh; x += 20) {
+    for (let x = 0; x <= bh; x += numTwenty) {
         ctx.moveTo(p, 0.5 + x + p);
         ctx.lineTo(bw + p, 0.5 + x + p);
     }
@@ -71,8 +73,7 @@ const draw = (coordinates, direction, path, foodArray) => {
 
     /* ENDGAME CHECK */
 
-    let gameover = gameOver();
-    if (gameover === true) {
+    if (gameOver()) {
         gameOverMsg();
         return;
     }
@@ -80,33 +81,33 @@ const draw = (coordinates, direction, path, foodArray) => {
     /* MOVEMENT CONDITIONS */
 
     if (direction.axis === 'x' && path.direction === 'right') {
-        coordinates.x += 20;
+        coordinates.x += numTwenty;
         previousCoor = '+>';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white', id: id})
     } else if (direction.axis === 'y' && path.direction === 'down') {
-        coordinates.y += 20;
+        coordinates.y += numTwenty;
         previousCoor = '+v';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white', id: id})
     } else if (direction.axis === 'y' && path.direction === 'up') {
-        coordinates.y += -20;
+        coordinates.y += -numTwenty;
         previousCoor = '-^';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white', id: id})
     } else if (direction.axis === 'x' && path.direction === 'left') {
-        coordinates.x += -20;
+        coordinates.x += -numTwenty;
         previousCoor = '-<';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white', id: id})
     }
-    
-    /* SNAKE */
-
-    ctx.fillStyle = 'white';
-    ctx.fillRect(coordinates.x, coordinates.y, 20, 20);
 
     /* FOOD */
     for (let i = 0; i < foodArray.length; i++) {
         ctx.fillStyle = foodArray[i].color;
         ctx.fillRect(foodArray[i].xCoor, foodArray[i].yCoor, foodArray[i].width, foodArray[i].height);
     }
+
+    /* SNAKE */
+
+    ctx.fillStyle = 'white';
+    ctx.fillRect(coordinates.x, coordinates.y, numTwenty, numTwenty);
 
     eatFood();
 
@@ -115,7 +116,7 @@ const draw = (coordinates, direction, path, foodArray) => {
     if (foodEaten > 0) {
         for (let i = previousMoves.length - 2; i > 1; i--) {
             ctx.fillStyle = 'white';
-            ctx.fillRect(previousMoves[i].x, previousMoves[i].y, 20, 20);
+            ctx.fillRect(previousMoves[i].x, previousMoves[i].y, numTwenty, numTwenty);
         }
     }
     arrayShrinker();
@@ -212,8 +213,7 @@ setInterval(function() {
 
 const food = () => {
 
-    let gameOverCheck = gameOver();
-    if (gameOverCheck) {
+    if (gameOver()) {
         foodArray = [];
         draw();
         return;
@@ -221,7 +221,7 @@ const food = () => {
 
     let x = randomCoordinate(400) + 1;
     let y = randomCoordinate(400) + 1;
-    foodArray.push({xCoor: x, yCoor: y, width: 19, height: 19, color: 'red'})
+    foodArray.push({xCoor: x, yCoor: y, width: numNinteen, height: numNinteen, color: 'red'})
     
 }
 
@@ -238,8 +238,8 @@ const eatFood = () => {
 
 const randomCoordinate = (max) => {
     let num = Math.floor(Math.random() * Math.floor(max));
-    let decimal = num / 20;
-    return Math.round(decimal) * 20;
+    let decimal = num / numTwenty;
+    return Math.round(decimal) * numTwenty;
 }
 
 const arrayShrinker = () => {
