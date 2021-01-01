@@ -16,9 +16,8 @@ let id = 0;
 let scoreCounter = 0;
 let foodEaten = 0;
 
-let snakeArray = [];
 let foodArray = [];
-let previousMovesObj = [];
+let previousMoves = [];
 
 const scoreCard = () => {
     const card = document.getElementById('card')
@@ -83,22 +82,21 @@ const draw = (coordinates, direction, path, foodArray) => {
     if (direction.axis === 'x' && path.direction === 'right') {
         coordinates.x += 20;
         previousCoor = '+>';
-        previousMovesObj.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
     } else if (direction.axis === 'y' && path.direction === 'down') {
         coordinates.y += 20;
         previousCoor = '+v';
-        previousMovesObj.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
     } else if (direction.axis === 'y' && path.direction === 'up') {
         coordinates.y += -20;
         previousCoor = '-^';
-        previousMovesObj.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
     } else if (direction.axis === 'x' && path.direction === 'left') {
-      coordinates.x += -20;
-      previousCoor = '-<';
-      previousMovesObj.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
+        coordinates.x += -20;
+        previousCoor = '-<';
+        previousMoves.push({x: coordinates.x, y: coordinates.y, width: 19, height: 19, color: 'white', id: id})
     }
     
-
     /* SNAKE */
 
     ctx.fillStyle = 'white';
@@ -113,12 +111,14 @@ const draw = (coordinates, direction, path, foodArray) => {
     eatFood();
 
     /* SNAKE TAIL */
-    
-    for (let i = previousMovesObj.length - 1; i > (previousMovesObj.length - 2) - foodEaten; i--) {
-        ctx.fillStyle = 'white';
-        ctx.fillRect(previousMovesObj[i].x, previousMovesObj[i].y, 20, 20);
-    }
 
+    if (foodEaten > 0) {
+        for (let i = previousMoves.length - 2; i > 0; i--) {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(previousMoves[i].x, previousMoves[i].y, 20, 20);
+        }
+    }
+    arrayShrinker();
 }
 
 /* EVENT LISTENERS */
@@ -142,7 +142,8 @@ document.addEventListener('keydown', (event) => {
 })
 
 const gameOver = () => {
-    if (coordinates.x === 420 || coordinates.x === -40 || coordinates.y === 420 || coordinates.y === -20) {
+    let overlap = snakeOverlap()
+    if (coordinates.x === 420 || coordinates.x === -40 || coordinates.y === 420 || coordinates.y === -20 || overlap === true) {
         return true;
     } 
     return false;
@@ -241,10 +242,20 @@ const randomCoordinate = (max) => {
     return Math.round(decimal) * 20;
 }
 
-/*
-for snake tail:
-keep track of how much food is eaten
-have an array that keeps track of all previous movement squares
-then add snake parts based off how much food eaten check and update snake parts that many times
+const arrayShrinker = () => {
+    if (previousMoves.length > foodEaten + 2) {
+        previousMoves.splice(0, 1);
+    }
+}
 
-*/
+const snakeOverlap = () => {
+    if (foodEaten > 2) {
+        for (let i = 0; i < previousMoves.length - 1; i++) {
+            if (previousMoves[i].x === coordinates.x && previousMoves[i].y === coordinates.y) {
+                return true;
+            }
+        }
+        return false
+    }
+    
+}
