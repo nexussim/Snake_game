@@ -37,13 +37,17 @@ const drawBoard = () => {
     const p = 0;
 
     for (let x = 0; x <= bw; x += numTwenty) {
+        ctx.beginPath();
         ctx.moveTo(x + p, p);
         ctx.lineTo(x + p, bh + p);
+        ctx.stroke();
     }
 
     for (let x = 0; x <= bh; x += numTwenty) {
+        ctx.beginPath();
         ctx.moveTo(p, x + p);
         ctx.lineTo(bw + p, x + p);
+        ctx.stroke();
     }
     ctx.strokeStyle = "#ffff";
     ctx.shadowBlur = 10;
@@ -70,28 +74,31 @@ const draw = (coordinates, direction, path, foodArray) => {
 
     if (gameOver()) {
         gameOverMsg();
+        drawBoard();
         return;
     }
 
     /* MOVEMENT CONDITIONS */
 
-    if (direction.axis === 'x' && path.direction === 'right') {
+    if (path.direction === 'right') {
         coordinates.x += numTwenty;
         previousCoor = '+>';
         previousMoves.push({x: coordinates.x, y: coordinates.y})
-    } else if (direction.axis === 'y' && path.direction === 'down') {
+    } else if (path.direction === 'down') {
         coordinates.y += numTwenty;
         previousCoor = '+v';
         previousMoves.push({x: coordinates.x, y: coordinates.y})
-    } else if (direction.axis === 'y' && path.direction === 'up') {
-        coordinates.y += -numTwenty;
+    } else if (path.direction === 'up') {
+        coordinates.y -= numTwenty;
         previousCoor = '-^';
         previousMoves.push({x: coordinates.x, y: coordinates.y})
-    } else if (direction.axis === 'x' && path.direction === 'left') {
-        coordinates.x += -numTwenty;
+    } else if (path.direction === 'left') {
+        coordinates.x -= numTwenty;
         previousCoor = '-<';
         previousMoves.push({x: coordinates.x, y: coordinates.y})
     }
+
+
 
     /* FOOD */
     for (let i = 0; i < foodArray.length; i++) {
@@ -118,7 +125,7 @@ const draw = (coordinates, direction, path, foodArray) => {
     /* REDRAW BOARD */
 
     drawBoard();
-    
+
     arrayShrinker();
 }
 
