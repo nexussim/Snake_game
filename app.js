@@ -37,13 +37,13 @@ const drawBoard = () => {
     const p = 0;
 
     for (let x = 0; x <= bw; x += numTwenty) {
-        ctx.moveTo(0.5 + x + p, p);
-        ctx.lineTo(0.5 + x + p, bh + p);
+        ctx.moveTo(x + p, p);
+        ctx.lineTo(x + p, bh + p);
     }
 
     for (let x = 0; x <= bh; x += numTwenty) {
-        ctx.moveTo(p, 0.5 + x + p);
-        ctx.lineTo(bw + p, 0.5 + x + p);
+        ctx.moveTo(p, x + p);
+        ctx.lineTo(bw + p, x + p);
     }
     ctx.strokeStyle = "#ffff";
     ctx.shadowBlur = 10;
@@ -66,10 +66,6 @@ const draw = (coordinates, direction, path, foodArray) => {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    /* REDRAW BOARD */
-
-    drawBoard();
-
     /* ENDGAME CHECK */
 
     if (gameOver()) {
@@ -82,19 +78,19 @@ const draw = (coordinates, direction, path, foodArray) => {
     if (direction.axis === 'x' && path.direction === 'right') {
         coordinates.x += numTwenty;
         previousCoor = '+>';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white'})
+        previousMoves.push({x: coordinates.x, y: coordinates.y})
     } else if (direction.axis === 'y' && path.direction === 'down') {
         coordinates.y += numTwenty;
         previousCoor = '+v';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white'})
+        previousMoves.push({x: coordinates.x, y: coordinates.y})
     } else if (direction.axis === 'y' && path.direction === 'up') {
         coordinates.y += -numTwenty;
         previousCoor = '-^';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white'})
+        previousMoves.push({x: coordinates.x, y: coordinates.y})
     } else if (direction.axis === 'x' && path.direction === 'left') {
         coordinates.x += -numTwenty;
         previousCoor = '-<';
-        previousMoves.push({x: coordinates.x, y: coordinates.y, width: numNinteen, height: numNinteen, color: 'white'})
+        previousMoves.push({x: coordinates.x, y: coordinates.y})
     }
 
     /* FOOD */
@@ -118,6 +114,11 @@ const draw = (coordinates, direction, path, foodArray) => {
             ctx.fillRect(previousMoves[i].x, previousMoves[i].y, numTwenty, numTwenty);
         }
     }
+
+    /* REDRAW BOARD */
+
+    drawBoard();
+    
     arrayShrinker();
 }
 
@@ -218,15 +219,15 @@ const food = () => {
         return;
     }
 
-    let x = randomCoordinate(400) + 1;
-    let y = randomCoordinate(400) + 1;
+    let x = randomCoordinate(400);
+    let y = randomCoordinate(400);
     foodArray.push({xCoor: x, yCoor: y, width: numNinteen, height: numNinteen, color: 'red'})
     
 }
 
 const eatFood = () => {
     for (let i = 0; i < foodArray.length; i++) {
-        if (foodArray[i].xCoor === coordinates.x + 1 && foodArray[i].yCoor === coordinates.y + 1) {
+        if (foodArray[i].xCoor === coordinates.x && foodArray[i].yCoor === coordinates.y) {
             foodArray.splice(i, 1);
             scoreCounter += 10;
             foodEaten++;
